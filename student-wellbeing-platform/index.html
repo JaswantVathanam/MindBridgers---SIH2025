@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindBridge - Student Mental Health Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="header__title">MindBridge</h1>
+            <nav class="header__nav">
+                <button class="btn btn--secondary btn--sm" id="roleSwitch">Switch Role</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Role Selection Modal -->
+    <div class="modal hidden" id="roleModal">
+        <div class="modal__content">
+            <h2>Select Your Role</h2>
+            <div class="role-buttons">
+                <button class="btn btn--primary" data-role="student">Student</button>
+                <button class="btn btn--primary" data-role="counselor">Counselor</button>
+                <button class="btn btn--primary" data-role="admin">Admin</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crisis Mode Modal -->
+    <div class="modal hidden" id="crisisModal">
+        <div class="modal__content crisis-modal">
+            <h2 class="crisis-title">🚨 Crisis Support Activated</h2>
+            <p class="crisis-message">We've detected you might be going through a difficult time. Your safety matters to us.</p>
+            <div class="crisis-resources">
+                <h3>Immediate Help Available:</h3>
+                <div class="crisis-buttons">
+                    <button class="btn btn--primary btn--full-width">📞 Campus Crisis Hotline: 1-800-HELP</button>
+                    <button class="btn btn--primary btn--full-width">🩺 Connect to Live Counselor</button>
+                    <button class="btn btn--secondary btn--full-width">📱 National Suicide Prevention: 988</button>
+                </div>
+            </div>
+            <button class="btn btn--outline" id="closeCrisis">I'm Safe - Continue</button>
+        </div>
+    </div>
+
+    <!-- Student Interface -->
+    <main class="main-content" id="studentInterface">
+        <!-- Avatar Section -->
+        <section class="avatar-section">
+            <div class="container">
+                <div class="avatar-container">
+                    <div class="avatar" id="studentAvatar">🌱</div>
+                    <div class="avatar-info">
+                        <h3 id="studentName">Welcome!</h3>
+                        <p class="avatar-stage">Sprout Stage • <span id="checkInStreak">5</span> day streak</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="avatarProgress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Onboarding (hidden after first use) -->
+        <section class="onboarding hidden" id="onboarding">
+            <div class="container">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>Welcome to MindBridge!</h2>
+                        <p>Choose your companion avatar:</p>
+                        <div class="avatar-choices">
+                            <button class="avatar-choice" data-avatar="seed">
+                                <span class="avatar-emoji">🌱</span>
+                                <span>Seed</span>
+                                <small>Growth & Learning</small>
+                            </button>
+                            <button class="avatar-choice" data-avatar="cloud">
+                                <span class="avatar-emoji">☁️</span>
+                                <span>Cloud</span>
+                                <small>Calm & Clarity</small>
+                            </button>
+                            <button class="avatar-choice" data-avatar="lantern">
+                                <span class="avatar-emoji">🏮</span>
+                                <span>Lantern</span>
+                                <small>Wisdom & Guidance</small>
+                            </button>
+                        </div>
+                        <button class="btn btn--primary btn--full-width" id="completeOnboarding" disabled>Start Journey</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daily Check-in -->
+        <section class="checkin-section">
+            <div class="container">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>How are you feeling today?</h2>
+                        <div class="mood-slider-container">
+                            <div class="mood-labels">
+                                <span>😰 Anxious</span>
+                                <span>😊 Happy</span>
+                            </div>
+                            <input type="range" class="mood-slider" id="moodSlider" min="1" max="5" value="3">
+                            <div class="current-mood">
+                                <span class="mood-emoji" id="currentMoodEmoji">😐</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Share what's on your mind:</label>
+                            <textarea class="form-control" id="moodNote" placeholder="Optional: What's affecting your mood today?"></textarea>
+                        </div>
+                        <button class="btn btn--primary btn--full-width" id="submitMood">Log Mood</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Consequence Visualizer -->
+        <section class="consequences hidden" id="consequenceSection">
+            <div class="container">
+                <div class="card">
+                    <div class="card__body">
+                        <h3>When you're feeling this way, try:</h3>
+                        <div class="action-options">
+                            <button class="action-btn" data-action="breathe">
+                                <span class="action-icon">🫁</span>
+                                <span>Breathing Exercise</span>
+                                <small>2 min guided session</small>
+                            </button>
+                            <button class="action-btn" data-action="journal">
+                                <span class="action-icon">✍️</span>
+                                <span>Write It Out</span>
+                                <small>Express your thoughts</small>
+                            </button>
+                            <button class="action-btn" data-action="talk">
+                                <span class="action-icon">💬</span>
+                                <span>Talk to Someone</span>
+                                <small>Connect with support</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Support -->
+        <section class="chat-section">
+            <div class="container">
+                <div class="card">
+                    <div class="card__header">
+                        <h3>24/7 Support Chat</h3>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message bot-message">
+                            <span class="message-sender">MindBot</span>
+                            <p>Hi! I'm here to listen and support you. How are you doing today? 💙</p>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" class="form-control" id="chatInput" placeholder="Type your message...">
+                        <button class="btn btn--primary" id="sendMessage">Send</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Microlearning -->
+        <section class="microlearning-section">
+            <div class="container">
+                <h2>Quick Learning Modules</h2>
+                <div class="modules-grid" id="modulesGrid">
+                    <!-- Modules will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seasonal Nudge -->
+        <section class="seasonal-section">
+            <div class="container">
+                <div class="card seasonal-card">
+                    <div class="card__body">
+                        <h3>🍂 Autumn Reflection</h3>
+                        <p id="seasonalMessage">Jot one lesson learned from this semester</p>
+                        <button class="btn btn--secondary" id="seasonalAction">Start Reflection Journal</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Counselor Interface -->
+    <main class="main-content hidden" id="counselorInterface">
+        <div class="container">
+            <h2>Crisis Queue Dashboard</h2>
+            
+            <!-- Crisis Queue -->
+            <section class="crisis-queue">
+                <div class="crisis-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">Active Cases</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">45s</span>
+                        <span class="stat-label">Avg Response</span>
+                    </div>
+                </div>
+                
+                <div class="crisis-list" id="crisisList">
+                    <!-- Crisis events will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Session Management -->
+            <section class="session-management">
+                <h3>Active Sessions</h3>
+                <div class="session-list" id="sessionList">
+                    <!-- Active sessions will be populated -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Admin Interface -->
+    <main class="main-content hidden" id="adminInterface">
+        <div class="container">
+            <h2>Institutional Dashboard</h2>
+            
+            <!-- Mood Trends -->
+            <section class="analytics-section">
+                <div class="chart-container" style="position: relative; height: 400px;">
+                    <canvas id="moodChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Crisis Analytics -->
+            <section class="crisis-analytics">
+                <h3>Crisis Analytics</h3>
+                <div class="analytics-grid">
+                    <div class="metric-card">
+                        <h4>Response Times</h4>
+                        <span class="metric-value">45s</span>
+                        <span class="metric-trend">↓ 15%</span>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Crisis Events</h4>
+                        <span class="metric-value">18</span>
+                        <span class="metric-trend">↑ 8%</span>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Resolution Rate</h4>
+                        <span class="metric-value">94%</span>
+                        <span class="metric-trend">→ 0%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Policy Recommendations -->
+            <section class="recommendations-section">
+                <h3>AI Policy Recommendations</h3>
+                <div class="recommendations-list" id="recommendationsList">
+                    <!-- Recommendations will be populated by JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
